@@ -1,5 +1,4 @@
 call plug#begin('~/.vim/plugged')
-
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 " Git diff in the sign column
 Plug 'airblade/vim-gitgutter'
@@ -23,6 +22,17 @@ Plug 'ycm-core/YouCompleteMe'
 Plug 'JamshedVesuna/vim-markdown-preview'
 " favorite theme
 Plug 'sjl/badwolf'
+
+" TS
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'jparise/vim-graphql'
+
+" JS
+Plug 'pangloss/vim-javascript'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+
 
 call plug#end()
 
@@ -148,13 +158,18 @@ nnoremap <leader>ga :YcmCompleter GetType<CR>
 nnoremap <leader>gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " autocmd for file types
+" https://www.reddit.com/r/vim/comments/ka27x8/python_indents_by_8_when_it_should_be_4/
+let g:pyindent_open_paren = 'shiftwidth()'
 au FileType python setl ts=4 sts=4 sw=4 tw=80
 au FileType javascript setl ts=2 sts=2 sw=2 tw=100
 au FileType go setl noexpandtab ts=8 sts=8 sw=8 tw=120
 au FileType sh setl ts=4 sts=4 sw=4 tw=100
+au FileType ts setl ts=2 sts=2 sw=2 tw=100
 au BufNewFile,BufRead Jenkinsfile setfiletype groovy
 au BufNewFile,BufRead,BufEnter *.dockerfile setfiletype dockerfile
 au BufNewFile,BufRead,BufEnter *.gohtml setfiletype html
+" prevent highlighting comments in red for JSON
+au FileType json syntax match Comment +\/\/.\+$+
 
 " fzf configuration
 let $FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow'
@@ -183,5 +198,7 @@ endw
 au BufWritePre * %s/\s\+$//e
 
 " vim markdown configuration
-let vim_markdown_preview_hotkey='<F7>'
-let vim_markdown_preview_github=1
+let vim_markdown_preview_hotkey = '<F7>'
+let vim_markdown_preview_github = 1
+
+let g:vim_jsx_pretty_highlight_close_tag = 1
