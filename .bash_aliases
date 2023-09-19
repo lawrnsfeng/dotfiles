@@ -1,4 +1,4 @@
-virtual() {
+vr() {
   source ~/law-env/"$@"/bin/activate;
 }
 
@@ -17,6 +17,11 @@ xo() {
 weather()
 {
   curl wttr.in
+}
+
+mcd()
+{
+    mkdir "$@" && cd "$@";
 }
 
 warp()
