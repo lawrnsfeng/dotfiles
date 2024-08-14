@@ -6,7 +6,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
-" mappingn to easily delete, change and surround
+" mapping to easily delete, change and surround
 Plug 'tpope/vim-surround'
 " Git commands
 Plug 'tpope/vim-fugitive'
@@ -14,7 +14,8 @@ Plug 'tpope/vim-fugitive'
 " lean & mean status/tabline
 Plug 'vim-airline/vim-airline'
 " syntax checking hacks
-Plug 'vim-syntastic/syntastic'
+" Plug 'vim-syntastic/syntastic'
+Plug 'dense-analysis/ale'
 " auto-completion
 Plug 'ycm-core/YouCompleteMe'
 
@@ -196,6 +197,7 @@ endw
 
 " trim all trailing whitespaces
 au BufWritePre * %s/\s\+$//e
+au BufWritePre * %s/$//e
 
 " vim markdown configuration
 let vim_markdown_preview_hotkey = '<F7>'
