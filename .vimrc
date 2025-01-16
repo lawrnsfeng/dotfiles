@@ -209,7 +209,7 @@ endw
 
 " trim all trailing whitespaces
 au BufWritePre * %s/\s\+$//e
-au BufWritePre * %s/$//e
+au BufWritePre * %s/$//e
 
 " vim markdown configuration
 let vim_markdown_preview_hotkey = '<F7>'
