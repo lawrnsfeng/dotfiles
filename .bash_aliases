@@ -2,6 +2,10 @@ vr() {
   source ~/law-env/"$@"/bin/activate;
 }
 
+vir() {
+  source .venv/bin/activate;
+}
+
 relic() {
   cd ~/law-personal;
 }
@@ -61,3 +65,8 @@ k_delete_all() {
     kubectl delete "$(kubectl api-resources --namespaced=true --verbs=delete -o name | tr "\n" "," | sed -e 's/,$//')" --all
 }
 
+login_ecr() {
+    region=$(aws configure get region --profile ${AWS_PROFILE})
+    account_id=$(aws sts get-caller-identity --profile ${AWS_PROFILE} --output text --query Account)
+    aws ecr get-login-password | docker login --username AWS --password-stdin ${account_id}.dkr.ecr.${region}.amazonaws.com
+}
