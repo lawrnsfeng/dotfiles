@@ -14,8 +14,10 @@ Plug 'tpope/vim-fugitive'
 " lean & mean status/tabline
 Plug 'vim-airline/vim-airline'
 " syntax checking hacks
-" Plug 'vim-syntastic/syntastic'
+"
+Plug 'vim-syntastic/syntastic'
 Plug 'dense-analysis/ale'
+Plug 'rust-lang/rust.vim'
 " auto-completion
 Plug 'ycm-core/YouCompleteMe'
 
@@ -100,6 +102,7 @@ set lbr
 
 if has('filetype')
 " if a given file type has its own special auto-indentation rules, use them
+  syntax on
   filetype plugin indent on
 else
 " turn on auto-indenting (if you turn off ':filetype plugin indent on')
@@ -143,8 +146,17 @@ nmap <C-l> <C-w><C-l>
 nmap <Enter> o<ESC>
 
 " YouCompleteMe configuration
-let g:ycm_python_binary_path="python3"
-let g:ycm_semantic_triggers =  {
+let g:ycm_python_binary_path = "/usr/bin/python3.12"
+let g:ycm_python_intepreter = "/usr/bin/python3.12"
+let g:ycm_global_ycm_extra_conf = expand('~/.vim/global_extra_conf.py')
+let g:ycm_language_server = [
+    \ {
+    \   'name': 'python',
+    \   'filetypes': ['python'],
+    \   'cmdline': ['pyright-langserver', '--stdio']
+    \ }
+    \ ]
+let g:ycm_semantic_triggers = {
   \   "c" : ["->", "."],
   \   "cpp,cuda,objcpp" : ["->", ".", "::"],
   \   "cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go" : [".", "re!\w{2}"],
@@ -197,10 +209,17 @@ endw
 
 " trim all trailing whitespaces
 au BufWritePre * %s/\s\+$//e
-au BufWritePre * %s/$//e
+au BufWritePre * %s/$//e
 
 " vim markdown configuration
 let vim_markdown_preview_hotkey = '<F7>'
 let vim_markdown_preview_github = 1
 
 let g:vim_jsx_pretty_highlight_close_tag = 1
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['python'] }
+let g:ale_python_mypy_executable = 'mypy'
+let g:ale_python_flake8_executable = 'flake8'
+let g:ale_linters = {
+      \ "python": ["mypy", "ruff"],
+      \ }
+let g:ale_linters_explicit = 1
