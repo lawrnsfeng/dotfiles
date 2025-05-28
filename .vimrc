@@ -20,6 +20,7 @@ Plug 'dense-analysis/ale'
 Plug 'rust-lang/rust.vim'
 " auto-completion
 Plug 'ycm-core/YouCompleteMe'
+" Plug 'davidhalter/jedi-vim'
 
 " markdown preview
 Plug 'JamshedVesuna/vim-markdown-preview'
@@ -146,22 +147,25 @@ nmap <C-l> <C-w><C-l>
 nmap <Enter> o<ESC>
 
 " YouCompleteMe configuration
-let g:ycm_python_binary_path = "/usr/bin/python3.12"
-let g:ycm_python_intepreter = "/usr/bin/python3.12"
+let g:ycm_python_binary_path = "python"
+let g:ycm_python_intepreter = "python"
 let g:ycm_global_ycm_extra_conf = expand('~/.vim/global_extra_conf.py')
 let g:ycm_language_server = [
-    \ {
-    \   'name': 'python',
-    \   'filetypes': ['python'],
-    \   'cmdline': ['pyright-langserver', '--stdio']
-    \ }
-    \ ]
+  \ {
+  \   'name': 'pyright',
+  \   'filetypes': [ 'python' ],
+  \   'cmdline': [ 'pyright-langserver', '--stdio' ],
+  \   "rootPatterns": ["pyrightconfig.json", "setup.py", "setup.cfg", "pyproject.toml", ".git"]
+  \ }
+  \ ]
 let g:ycm_semantic_triggers = {
   \   "c" : ["->", "."],
   \   "cpp,cuda,objcpp" : ["->", ".", "::"],
   \   "cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go" : [".", "re!\w{2}"],
   \   "python" : [".", "re!\w{2}"],
   \ }
+let g:ycm_server_log_level = 'debug'
+let g:ycm_server_log_file = '/tmp/ycm_log'
 let g:ycm_disable_for_files_larger_than_kb=3000
 let g:ycm_key_invoke_completion="<C-j>"
 let g:ycm_key_list_stop_completion=["<CR>"]
