@@ -172,8 +172,10 @@ let $FZF_DEFAULT_OPTS='--reverse'
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
 
 " keybindings
-nnoremap <C-p> :Files<CR>  " fuzzy find files
-nnoremap <C-g> :Rg<CR>     " fuzzy search file contents
+" fuzzy find files
+nnoremap <C-p> :Files<CR>
+" fuzzy search file contents
+nnoremap <C-g> :Rg<CR>
 
 
 " ==============================================================================
