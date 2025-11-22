@@ -18,32 +18,13 @@ def find_workspace_dir(file_path):
 
 
 def Settings(**kwargs):
-    filename = kwargs.get("filename")
     return {
-        "ls": {
-            "pyright": {
-                "disableLanguageServices": False,
-                "disableOrganizeImports": True,
-                "disableTaggedHints": True,
-                "useLibraryCodeForTypes": False,
-                "openFilesOnly": True,
-            },
-            "python": {
-                "analysis": {
-                    'extraPaths': (
-                        [
-                            find_workspace_dir(filename)
-                        ]
-                        if filename
-                        else []
-                    ),
-                    "autoImportCompletions": False,
-                    "autoSearchPaths": False,
-                    "useLibraryCodeForTypes": False,
-                    "typeCheckingMode": "off",
-                    "diagnosticMode": "openFilesOnly",
-                    "logLevel": "Error",
-                },
-            },
-        },
+        'ls': {
+            'rust-analyzer': {
+                'cargo': {
+                    'features': ['server', 'others'],
+                    'noDefaultFeatures': True,
+                }
+            }
+        }
     }

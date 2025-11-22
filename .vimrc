@@ -1,201 +1,305 @@
-call plug#begin('~/.vim/plugged')
-Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-" Git diff in the sign column
-Plug 'airblade/vim-gitgutter'
+" ==============================================================================
+" VIM PLUGIN MANAGEMENT
+" ==============================================================================
 
+call plug#begin('~/.vim/plugged')
+
+" file explorer
+Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+
+" git integration
+Plug 'airblade/vim-gitgutter'  " show git diff in sign column
+Plug 'tpope/vim-fugitive'      " git commands in vim
+
+" fuzzy finder
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
-" mapping to easily delete, change and surround
-Plug 'tpope/vim-surround'
-" Git commands
-Plug 'tpope/vim-fugitive'
+" text manipulation
+Plug 'tpope/vim-surround'  " easily delete, change and add surroundings
 
-" lean & mean status/tabline
-Plug 'vim-airline/vim-airline'
-" syntax checking hacks
-"
-Plug 'vim-syntastic/syntastic'
-Plug 'dense-analysis/ale'
-Plug 'rust-lang/rust.vim'
-" auto-completion
-Plug 'ycm-core/YouCompleteMe'
-" Plug 'davidhalter/jedi-vim'
+" status line
+Plug 'vim-airline/vim-airline'  " lean & mean status/tabline
 
-" markdown preview
-Plug 'JamshedVesuna/vim-markdown-preview'
-" favorite theme
-Plug 'sjl/badwolf'
+" syntax & linting
+Plug 'vim-syntastic/syntastic'  " syntax checking framework
+Plug 'dense-analysis/ale'       " asynchronous linting engine
 
-" TS
-Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
-Plug 'jparise/vim-graphql'
-
-" JS
-Plug 'pangloss/vim-javascript'
-Plug 'maxmellon/vim-jsx-pretty'
+" language support
+Plug 'rust-lang/rust.vim'                                        " rust
+Plug 'leafgarland/typescript-vim'                                " typescript
+Plug 'peitalin/vim-jsx-typescript'                               " jsx/tsx
+Plug 'jparise/vim-graphql'                                       " graphql
+Plug 'pangloss/vim-javascript'                                   " javascript
+Plug 'maxmellon/vim-jsx-pretty'                                  " jsx
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 
+" auto-completion
+Plug 'ycm-core/YouCompleteMe'
+
+" markdown
+Plug 'JamshedVesuna/vim-markdown-preview'
+
+" color scheme
+Plug 'sjl/badwolf'
 
 call plug#end()
 
 
+" ==============================================================================
+" COLOR SCHEME & APPEARANCE
+" ==============================================================================
+
 colorscheme badwolf
 set background=dark
 
-" display line numbers on the left
-set nu
-" show relative live numbers
-set relativenumber
+" line numbers
+set nu              " number: display line numbers
+set relativenumber  " show relative line numbers
 
-" scrolloff determines the number of context lines above and below the cursor
-set so=7
-" better command-line completion
-set wildmenu
-" display the cursor position on the last line
-set ruler
-" set the command window height to 2 lines
-set cmdheight=2
+" visual guides
+set cursorline       " highlight current line
+set colorcolumn=80   " show column at 80 characters
 
-" allows backspacing over autoindent, line breaks and start of insert action
-set backspace=eol,start,indent
-" pressing left/right will move to the prev/next line after reaching the
-" first/last character
-set whichwrap+=<,>,h,l,[,]
+" cursor context
+set so=7  " scrolloff: keep 7 lines visible above/below cursor when scrolling
 
-" use case insensitive search, except when using capital letters
-set ignorecase
-set smartcase
+" command line
+set wildmenu      " enhanced command-line completion
+set ruler         " show cursor position
+set cmdheight=2   " set command window height to 2 lines
 
-" highlight searches (use <C-L> to temporarily turn off highlighting)
-set hlsearch
-set incsearch
-" map <C-L> (redraw screen) to also turn off search highlighting until the
-" next search
+" matching brackets
+set showmatch  " briefly jump to matching bracket when inserted
+
+
+" ==============================================================================
+" EDITOR BEHAVIOR
+" ==============================================================================
+
+" compatibility
+set nocompatible  " don't preserve backward compatibility with vi
+
+" backspace behavior
+set backspace=eol,start,indent  " allow backspacing over everything in insert mode
+
+" line wrapping
+set whichwrap+=<,>,h,l,[,]  " allow cursor keys to wrap to prev/next line
+set lbr                     " linebreak: wrap long lines at word boundaries
+
+" performance
+set lazyredraw  " don't redraw while executing macros
+
+" special characters
+set magic  " enable extended regex (special chars need backslash)
+
+
+" ==============================================================================
+" SEARCH SETTINGS
+" ==============================================================================
+
+set ignorecase  " case insensitive search
+set smartcase   " override ignorecase if search contains uppercase
+set hlsearch    " highlight search results
+set incsearch   " show matches as you type
+
+" clear search highlighting with ctrl-l (also redraws screen)
 nnoremap <C-L> :nohl<CR><C-L>
 
-" no redraw while excuting macros, registers and commands haven't typed
-set lazyredraw
-" characters having a special meaning need to be preceded with a backslash
-set magic
-" when a bracket is inserted, briefly jump to the matching one
-set showmatch
 
-" no sound effects
-set noerrorbells
-set novisualbell
-" timeout on keycodes, a compatible settings with tmux
+" ==============================================================================
+" INDENTATION & TABS
+" ==============================================================================
+
+" default settings (2 spaces)
+set expandtab      " use spaces instead of tabs
+set shiftwidth=2   " sw: number of spaces for auto-indent
+set tabstop=4      " ts: number of spaces a tab counts for
+set softtabstop=2  " sts: number of spaces for <tab> in insert mode
+
+" auto-indenting
+if has('filetype')
+  syntax on
+  filetype plugin indent on  " use filetype-specific indentation
+else
+  set ai  " autoindent: auto-indent
+  set si  " smartindent: smart indent
+endif
+
+
+" ==============================================================================
+" FILE HANDLING
+" ==============================================================================
+
+set nobackup    " nobackup: no backup before overwriting
+set nowb        " nowritebackup: no backup after overwriting
+set noswapfile  " don't create swap files
+set confirm     " prompt for confirmation on dangerous operations
+
+
+" ==============================================================================
+" KEYBOARD & TIMING
+" ==============================================================================
+
+set noerrorbells  " no sound effects
+set novisualbell  " no visual bell
+
+" timeout settings (compatible with tmux)
 set timeout timeoutlen=100
 set ttimeout ttimeoutlen=100
 
-" default soft tab and indentation
-set expandtab
-set shiftwidth=2
-set tabstop=4
-set softtabstop=2
 
-" wrap long lines
-set lbr
+" ==============================================================================
+" NERDTREE CONFIGURATION
+" ==============================================================================
 
-" don't preserve backward compatibility with vi
-:set nocompatible
+let NERDTreeShowHidden=1  " show hidden files
 
-if has('filetype')
-" if a given file type has its own special auto-indentation rules, use them
-  syntax on
-  filetype plugin indent on
-else
-" turn on auto-indenting (if you turn off ':filetype plugin indent on')
-  set ai
-
-" make auto-indenting 'smarter' (if you turn off ':filetype plugin indent on')
-  set si
-endif
-
-" highlight the current line and the linebreak column
-set cursorline
-set colorcolumn=80
-
-" no backup before overwriting a file
-set nobackup
-set nowb
-set noswapfile
-
-" always prompt for dangerous operation
-set confirm
-
-" show hidden files in NERDTree
-let NERDTreeShowHidden=1
-" use <C-t> to toggle NERDTree
+" toggle nerdtree with ctrl-t
 nmap <C-t> :NERDTreeToggle<CR>
-" exit Vim if only NERDTree left
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
-    \ quit | endif
 
-" highligh trailing whitespaces
-highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$/
+" auto-close vim if nerdtree is the only window left
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 
-" dynamic window switching
-nmap <C-j> <C-w><C-j>
-nmap <C-k> <C-w><C-k>
-nmap <C-h> <C-w><C-h>
-nmap <C-l> <C-w><C-l>
 
-" empower Enter
-nmap <Enter> o<ESC>
+" ==============================================================================
+" FZF CONFIGURATION
+" ==============================================================================
 
-" YouCompleteMe configuration
+" use ripgrep for file searching
+let $FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow'
+let $FZF_DEFAULT_OPTS='--reverse'
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
+
+" keybindings
+nnoremap <C-p> :Files<CR>  " fuzzy find files
+nnoremap <C-g> :Rg<CR>     " fuzzy search file contents
+
+
+" ==============================================================================
+" YOUCOMPLETEME CONFIGURATION
+" ==============================================================================
+
+" python interpreter
 let g:ycm_python_binary_path = "python"
 let g:ycm_python_intepreter = "python"
-let g:ycm_global_ycm_extra_conf = expand('~/.vim/global_extra_conf.py')
+
+" language server configuration
 let g:ycm_language_server = [
   \ {
-  \   'name': 'pyright',
+  \   'name': 'ty',
   \   'filetypes': [ 'python' ],
-  \   'cmdline': [ 'pyright-langserver', '--stdio' ],
-  \   "rootPatterns": ["pyrightconfig.json", "setup.py", "setup.cfg", "pyproject.toml", ".git"]
+  \   'cmdline': [ 'ty', 'server' ],
+  \   "rootPatterns": ["pyproject.toml", ".git"]
   \ }
   \ ]
+
+" semantic triggers for auto-completion
 let g:ycm_semantic_triggers = {
   \   "c" : ["->", "."],
   \   "cpp,cuda,objcpp" : ["->", ".", "::"],
   \   "cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go" : [".", "re!\w{2}"],
   \   "python" : [".", "re!\w{2}"],
   \ }
+
+" logging and debugging
 let g:ycm_server_log_level = 'debug'
+let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_file = '/tmp/ycm_log'
+
+" performance
 let g:ycm_disable_for_files_larger_than_kb=3000
+
+" keybindings
 let g:ycm_key_invoke_completion="<C-j>"
 let g:ycm_key_list_stop_completion=["<CR>"]
 let g:ycm_autoclose_preview_window_after_completion=1
+
 nnoremap <leader>gq :YcmCompleter GetDoc<CR>
 nnoremap <leader>ga :YcmCompleter GetType<CR>
 nnoremap <leader>gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
-" autocmd for file types
-" https://www.reddit.com/r/vim/comments/ka27x8/python_indents_by_8_when_it_should_be_4/
+" rust support
+let g:ycm_rust_toolchain_root = $HOME . '/.cargo'
+
+
+" ==============================================================================
+" ALE (ASYNCHRONOUS LINT ENGINE) CONFIGURATION
+" ==============================================================================
+
+let g:ale_linters_explicit = 1
+let g:ale_linters = {
+  \ 'python': ['ty', 'ruff'],
+  \ }
+let g:ale_python_pyrefly_executable = 'ty'
+
+
+" ==============================================================================
+" SYNTASTIC CONFIGURATION
+" ==============================================================================
+
+" disable for python (using ale instead)
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['python'] }
+
+
+" ==============================================================================
+" MARKDOWN CONFIGURATION
+" ==============================================================================
+
+let vim_markdown_preview_hotkey = '<F7>'
+let vim_markdown_preview_github = 1  " use github-flavored markdown
+
+
+" ==============================================================================
+" JSX/TSX CONFIGURATION
+" ==============================================================================
+
+let g:vim_jsx_pretty_highlight_close_tag = 1
+
+
+" ==============================================================================
+" FILETYPE-SPECIFIC SETTINGS
+" ==============================================================================
+
+" python
 let g:pyindent_open_paren = 'shiftwidth()'
-au FileType python setl ts=4 sts=4 sw=4 tw=80
+au FileType python setl ts=4 sts=4 sw=4 tw=80  " tabstop, softtabstop, shiftwidth, textwidth
+
+" javascript
 au FileType javascript setl ts=2 sts=2 sw=2 tw=100
+
+" go
 au FileType go setl noexpandtab ts=8 sts=8 sw=8 tw=120
+
+" shell scripts
 au FileType sh setl ts=4 sts=4 sw=4 tw=100
+
+" typescript
 au FileType ts setl ts=2 sts=2 sw=2 tw=100
+
+" json (prevent highlighting comments in red)
+au FileType json syntax match Comment +\/\/.\+$+
+
+" custom file type associations
 au BufNewFile,BufRead Jenkinsfile setfiletype groovy
 au BufNewFile,BufRead,BufEnter *.dockerfile setfiletype dockerfile
 au BufNewFile,BufRead,BufEnter *.gohtml setfiletype html
-" prevent highlighting comments in red for JSON
-au FileType json syntax match Comment +\/\/.\+$+
 
-" fzf configuration
-let $FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow'
-let $FZF_DEFAULT_OPTS='--reverse'
-let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
-nnoremap <C-p> :Files<CR>
-nnoremap <C-g> :Rg<CR>
 
-" dynamic line shifting
+" ==============================================================================
+" CUSTOM KEYBINDINGS
+" ==============================================================================
+
+" window navigation (ctrl + hjkl)
+nmap <C-j> <C-w><C-j>
+nmap <C-k> <C-w><C-k>
+nmap <C-h> <C-w><C-h>
+nmap <C-l> <C-w><C-l>
+
+" insert blank line below cursor with enter (normal mode)
+nmap <Enter> o<ESC>
+
+" move lines up/down (alt + jk)
 nnoremap <A-j> :m .+1<CR>==
 nnoremap <A-k> :m .-2<CR>==
 inoremap <A-j> <Esc>:m .+1<CR>==gi
@@ -203,7 +307,7 @@ inoremap <A-k> <Esc>:m .-2<CR>==gi
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
-" a workaround to avail <A> in Linux, making it the same as <ESC>
+" workaround: map alt key in linux (make esc+key work as alt+key)
 let c='a'
 while c <= 'z'
   exec "set <A-".c.">=\e".c
@@ -211,19 +315,22 @@ while c <= 'z'
   let c = nr2char(1+char2nr(c))
 endw
 
-" trim all trailing whitespaces
+
+" ==============================================================================
+" VISUAL ENHANCEMENTS
+" ==============================================================================
+
+" highlight trailing whitespace in red
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+
+
+" ==============================================================================
+" AUTO-COMMANDS
+" ==============================================================================
+
+" trim trailing whitespace on save
 au BufWritePre * %s/\s\+$//e
+
+" remove carriage returns on save
 au BufWritePre * %s/$//e
-
-" vim markdown configuration
-let vim_markdown_preview_hotkey = '<F7>'
-let vim_markdown_preview_github = 1
-
-let g:vim_jsx_pretty_highlight_close_tag = 1
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['python'] }
-let g:ale_python_mypy_executable = 'mypy'
-let g:ale_python_flake8_executable = 'flake8'
-let g:ale_linters = {
-      \ "python": ["mypy", "ruff"],
-      \ }
-let g:ale_linters_explicit = 1
