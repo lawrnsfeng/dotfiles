@@ -186,6 +186,9 @@ nnoremap <C-g> :Rg<CR>
 let g:ycm_python_binary_path = "python"
 let g:ycm_python_intepreter = "python"
 
+" global extra conf, called upon starting vim
+let g:ycm_global_ycm_extra_conf = expand('~/.vim/global_extra_conf.py')
+
 " language server configuration
 let g:ycm_language_server = [
   \ {
