@@ -16,14 +16,20 @@ def find_workspace_dir(file_path):
     # Fallback to the file's directory if no markers are found
     return os.path.dirname(file_path)
 
-
 def Settings(**kwargs):
+    # Default fallback - actual settings come from g:ycm_language_server in .vimrc
+    features = []
+    features_str = os.getenv("RUST_FEATURES", "")
+    if features_str:
+        features = [
+            feat.strip() for feat in features_str.split(",")
+        ]
     return {
         'ls': {
             'rust-analyzer': {
                 'cargo': {
-                    'features': ['server', 'others'],
-                    'noDefaultFeatures': True,
+                    'features': features,
+                    'noDefaultFeatures': False,
                 }
             }
         }

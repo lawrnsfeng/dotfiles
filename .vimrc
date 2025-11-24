@@ -182,6 +182,107 @@ nnoremap <C-g> :Rg<CR>
 " YOUCOMPLETEME CONFIGURATION
 " ==============================================================================
 
+" Configure rust-analyzer with unique instance per Vim session
+" Each Vim instance runs its own rust-analyzer with different settings
+
+" Store features in script-local (Vim-instance-specific) variables
+if !exists('s:rust_features')
+    let s:rust_features = []
+    let s:rust_no_default_features = v:false
+endif
+
+" Generate unique identifier for this Vim instance
+let s:vim_instance_id = getpid()
+
+" Configure YCM to use instance-specific rust-analyzer
+let g:ycm_language_server = get(g:, 'ycm_language_server', {})
+
+function! GetRustAnalyzerConfig()
+    return {
+        \ 'rust-analyzer': {
+            \ 'cargo': {
+                \ 'features': s:rust_features,
+                \ 'noDefaultFeatures': s:rust_no_default_features,
+            \ },
+            \ 'procMacro': {
+                \ 'enable': v:true
+            \ }
+        \ }
+    \ }
+endfunction
+
+" Set up language server with instance-specific settings
+let g:ycm_language_server['rust'] = {
+    \ 'cmdline': ['rust-analyzer'],
+    \ 'filetypes': ['rust'],
+    \ 'project_root_files': ['Cargo.toml'],
+    \ 'settings': GetRustAnalyzerConfig()
+\ }
+
+" Function to set rust-analyzer features
+function! SetRustFeatures(features)
+    " Parse comma-separated features
+    let l:feature_list = split(a:features, ',')
+    let l:feature_list = map(l:feature_list, 'trim(v:val)')
+
+    " Update script-local variables
+    let s:rust_features = l:feature_list
+    let s:rust_no_default_features = v:true
+
+    " Update the global config
+    let g:ycm_language_server['rust']['settings'] = GetRustAnalyzerConfig()
+
+    " Completely restart YCM to pick up new settings
+    try
+        execute 'YcmCompleter StopServer'
+        sleep 300m
+        execute 'YcmRestartServer'
+        echo 'Rust features set to: [' . join(l:feature_list, ', ') . '] (Vim instance ' . s:vim_instance_id . ')'
+    catch
+        echo 'Error restarting YCM. Try :YcmRestartServer manually'
+    endtry
+endfunction
+
+command! -nargs=1 RustFeatures call SetRustFeatures(<q-args>)
+
+" Reset to default
+function! ResetRustFeatures()
+    let s:rust_features = []
+    let s:rust_no_default_features = v:false
+
+    let g:ycm_language_server['rust']['settings'] = GetRustAnalyzerConfig()
+
+    try
+        execute 'YcmCompleter StopServer'
+        sleep 300m
+        execute 'YcmRestartServer'
+        echo 'Rust features reset (Vim instance ' . s:vim_instance_id . ')'
+    catch
+        echo 'Error restarting YCM. Try :YcmRestartServer manually'
+    endtry
+endfunction
+
+command! RustFeaturesReset call ResetRustFeatures()
+
+" Show current config
+function! ShowRustFeatures()
+    echo '=== Rust Features (Vim Instance ' . s:vim_instance_id . ') ==='
+
+    if empty(s:rust_features)
+        echo 'Features: [default]'
+    else
+        echo 'Features: [' . join(s:rust_features, ', ') . ']'
+    endif
+    echo 'No default features: ' . (s:rust_no_default_features ? 'true' : 'false')
+    echo ''
+    echo 'Active config:'
+    echo string(g:ycm_language_server['rust']['settings'])
+endfunction
+
+command! RustFeaturesShow call ShowRustFeatures()
+
+" =====
+
 " python interpreter
 let g:ycm_python_binary_path = "python"
 let g:ycm_python_intepreter = "python"
